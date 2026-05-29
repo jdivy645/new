@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>World Environment Day · Heal the Planet</title>
+  <meta name="description" content="Hand-gesture interactive installation for World Environment Day." />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <!-- Hidden camera feed (detection runs on the unflipped frame) -->
+  <video id="cam" playsinline muted autoplay></video>
+
+  <!-- Rendering surfaces (only the active tab's surface is shown) -->
+  <div id="stage">
+    <canvas id="canvas2d"></canvas>
+    <div id="three-mount"></div>
+  </div>
+
+  <!-- Overlay layer: HUD, tab rail, cursor, banners (pointer-events scoped) -->
+  <div id="overlay">
+    <!-- Top branding -->
+    <header id="brand">
+      <div class="brand-mark" aria-hidden="true">🌍</div>
+      <div class="brand-text">
+        <div class="brand-title" id="brandTitle">World Environment Day</div>
+        <div class="brand-sub" id="brandSub">June 5 · Heal the planet with your hands</div>
+      </div>
+    </header>
+
+    <!-- Top-right controls -->
+    <div id="controls">
+      <button id="muteBtn" class="ctl" aria-label="Sound on or off" title="Toggle sound (M)">🔇 <span>Sound off</span></button>
+      <button id="helpBtn" class="ctl" aria-label="Show help" title="How to play (H)">？ Help</button>
+    </div>
+
+    <!-- Touch-free tab rail (also clickable / keyboard) -->
+    <nav id="tabrail" aria-label="Experiences"></nav>
+
+    <!-- Bottom cumulative impact ribbon -->
+    <footer id="ribbon"></footer>
+
+    <!-- Touch-free gesture legend (per active tab) -->
+    <aside id="gesturebar" aria-hidden="true"></aside>
+
+    <!-- Hand cursor reticle -->
+    <div id="cursor" aria-hidden="true"><span id="cursorTag"></span></div>
+
+    <!-- Center banner (milestones / finales) -->
+    <div id="banner" aria-live="polite"></div>
+
+    <!-- Operator / status nudges -->
+    <div id="nudge" role="status"></div>
+  </div>
+
+  <!-- Attract overlay (idle) -->
+  <div id="attract" class="hidden">
+    <div class="attract-inner">
+      <div class="attract-hand" aria-hidden="true">✋</div>
+      <div class="attract-cta" id="attractCta">RAISE YOUR HAND TO BEGIN</div>
+      <div class="attract-sub" id="attractSub">Heal the planet — no touching needed</div>
+      <div class="attract-wall" id="attractWall" aria-hidden="true"></div>
+    </div>
+    <video id="pip" playsinline muted class="pip"></video>
+  </div>
+
+  <!-- Pledge overlay -->
+  <div id="pledge" class="hidden"></div>
+
+  <!-- Loading screen -->
+  <div id="loading">
+    <div class="loading-orb">🌍</div>
+    <div class="loading-title">Warming up the planet…</div>
+    <div class="loading-status" id="loadingStatus">Loading hand tracking…</div>
+    <div class="loading-hint" id="loadingHint"></div>
+  </div>
+
+  <!-- Camera-permission / error panel (friendly, never a stack trace) -->
+  <div id="errpanel" class="hidden">
+    <div class="err-orb">🎥</div>
+    <div class="err-title" id="errTitle">Camera unavailable</div>
+    <div class="err-msg" id="errMsg"></div>
+    <button id="errRetry" class="ctl big">Try again</button>
+  </div>
+
+  <!-- Plain (non-module) bootstrap diagnostics: runs even if ES modules are blocked,
+       so the user is never left staring at a frozen loading screen. -->
+  <script>
+    (function () {
+      var status = document.getElementById('loadingStatus');
+      var hint = document.getElementById('loadingHint');
+      function setHint(m) { if (hint) hint.textContent = m; }
+      if (location.protocol === 'file:') {
+        if (status) status.textContent = "Don't open the file directly.";
+        setHint('Run start.bat (or "node server.js") and open http://localhost:8000 — the camera and app only work over a local server, not from file://');
+        return;
+      }
+      window.addEventListener('error', function (e) {
+        setHint('Startup error: ' + (e.message || e.error || 'unknown') + ' — press F12 for details.');
+      });
+      window.addEventListener('unhandledrejection', function (e) {
+        setHint('Startup problem: ' + ((e.reason && e.reason.message) || e.reason || 'unknown') + ' — press F12 for details.');
+      });
+      setTimeout(function () {
+        var loading = document.getElementById('loading');
+        if (loading && !loading.classList.contains('hidden')) {
+          setHint('Taking a while… If you see no camera prompt, click the camera icon in the address bar and choose Allow. (First load also downloads a ~7 MB hand-tracking model.)');
+        }
+      }, 14000);
+    })();
+  </script>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

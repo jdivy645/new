@@ -1,0 +1,11 @@
+{
+  "name": "wed-gesture-installation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Hand-gesture interactive installation for World Environment Day (4 experiences).",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "serve": "node server.js"
+  }
+}
