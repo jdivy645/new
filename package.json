@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "serve": "node server.js"
+    "serve": "node server.js",
+    "build:site": "npm --prefix landing install && npm --prefix landing run build && node build-site.mjs"
   }
 }
