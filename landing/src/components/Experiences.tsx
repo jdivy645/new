@@ -9,13 +9,13 @@ interface ExperiencesProps {
 export default function Experiences({ onLaunch }: ExperiencesProps) {
   return (
     <div className="relative z-10 h-full w-full flex items-center justify-center px-4 sm:px-6">
-      {/* Minimal brand lockup (replaces the removed nav, keeps the brand present) */}
+      {/* Product brand lockup */}
       <div className="absolute top-6 sm:top-8 left-1/2 -translate-x-1/2">
         <span
           className="text-2xl sm:text-3xl tracking-tight bg-gradient-to-r from-[#8fe388] via-[#3fd3e6] to-[#ffd166] bg-clip-text text-transparent"
           style={{ fontFamily: "'Instrument Serif', serif" }}
         >
-          Digital Hammerr<sup className="text-[0.5em] align-super">®</sup>
+          Obliq&nbsp;AI
         </span>
       </div>
 
@@ -46,6 +46,20 @@ export default function Experiences({ onLaunch }: ExperiencesProps) {
           </button>
         ))}
       </div>
+
+      {/* Company footer */}
+      <footer className="absolute bottom-5 left-1/2 -translate-x-1/2 text-center px-4">
+        <p className="text-xs sm:text-sm text-muted-foreground">
+          Crafted by{' '}
+          <span
+            className="text-foreground/90"
+            style={{ fontFamily: "'Instrument Serif', serif" }}
+          >
+            Digital Hammerr
+          </span>{' '}
+          · © 2026
+        </p>
+      </footer>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Experiences from '@/components/Experiences';
 import PlayerOverlay from '@/components/PlayerOverlay';
+import Intro from '@/components/Intro';
 import { type Experience } from '@/data/experiences';
 
 const VIDEO_SRC =
@@ -8,10 +9,18 @@ const VIDEO_SRC =
 
 export default function App() {
   const [active, setActive] = useState<Experience['id'] | null>(null);
+  const [introFade, setIntroFade] = useState(false);
+  const [introGone, setIntroGone] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Pause the background video while a visualization is open so it doesn't
-  // steal GPU/CPU from the experience running in the iframe (kills lag).
+  // Intro splash: hold ~2s, fade out, then unmount so it never blocks clicks.
+  useEffect(() => {
+    const t1 = setTimeout(() => setIntroFade(true), 2000);
+    const t2 = setTimeout(() => setIntroGone(true), 2750);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, []);
+
+  // Pause the background video while a visualization is open (saves GPU).
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
@@ -32,8 +41,7 @@ export default function App() {
         src={VIDEO_SRC}
       />
 
-      {/* Subtle contrast scrim so glass tiles + text stay legible over any
-          video frame (does not block clicks) */}
+      {/* Contrast scrim so glass tiles + text stay legible over any video frame */}
       <div
         className="absolute inset-0 z-[1] pointer-events-none"
         style={{
@@ -46,6 +54,9 @@ export default function App() {
       <Experiences onLaunch={(id) => setActive(id)} />
 
       {active && <PlayerOverlay id={active} onClose={() => setActive(null)} />}
+
+      {/* Intro splash on top until it fades away */}
+      {!introGone && <Intro fading={introFade} />}
     </div>
   );
 }

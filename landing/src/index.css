@@ -86,6 +86,11 @@
   100% { transform: translateX(260%); }
 }
 
+@keyframes hammerTap {
+  0%, 100% { transform: rotate(-14deg); }
+  50% { transform: rotate(10deg); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-rise,
   .animate-fade-rise-delay,
